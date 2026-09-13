@@ -1,0 +1,9 @@
+nexus
+*.exe
+*.test
+*.out
+/bin/
+/dist/
+.idea/
+.vscode/
+.DS_Store
