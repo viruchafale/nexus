@@ -20,9 +20,9 @@ func TestParseDefaultsEmpty(t *testing.T) {
 
 func TestParseReadsEnv(t *testing.T) {
 	env := map[string]string{
-		"NEXUS_DEBUG":         "1",
-		"NEXUS_NO_COLOR":      "true",
-		"NEXUS_AI_MODEL":      "gpt-4o-mini",
+		"NEXUS_DEBUG":          "1",
+		"NEXUS_NO_COLOR":       "true",
+		"NEXUS_AI_MODEL":       "gpt-4o-mini",
 		"NEXUS_OPENAI_API_KEY": "secret",
 	}
 	c := parse(func(k string) string { return env[k] })

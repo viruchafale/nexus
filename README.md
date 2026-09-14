@@ -71,12 +71,12 @@ make fmt     # gofmt -w + go vet
 make clean   # rm -f nexus
 ```
 
-## Current feature status (Phase 1 — Foundation)
+## Current feature status (Phase 2 — System)
 
 | Command | Status |
 |---|---|
 | `nexus dashboard` | Stub — prints "not implemented yet" |
-| `nexus system` | Stub |
+| `nexus system` | Done — OS/arch/hostname, CPU, memory, disk, uptime via gopsutil |
 | `nexus processes` | Stub |
 | `nexus docker` | Stub |
 | `nexus git` | Stub |

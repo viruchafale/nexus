@@ -4,6 +4,8 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+
+	"nexus/internal/system"
 )
 
 // Phase 1: command skeletons only. Each prints a clear
@@ -23,7 +25,11 @@ var systemCmd = &cobra.Command{
 	Use:   "system",
 	Short: "Show system information",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		fmt.Fprintln(cmd.OutOrStdout(), "not implemented yet: system")
+		info, err := system.Collect()
+		fmt.Fprint(cmd.OutOrStdout(), system.Format(info))
+		if err != nil {
+			fmt.Fprintln(cmd.ErrOrStderr(), "Warning: some metrics unavailable:", err)
+		}
 		return nil
 	},
 }
