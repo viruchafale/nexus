@@ -5,6 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"nexus/internal/process"
 	"nexus/internal/system"
 )
 
@@ -34,11 +35,30 @@ var systemCmd = &cobra.Command{
 	},
 }
 
+// processesListFlags holds --limit/--sort values (cobra-idiomatic).
+var (
+	processesLimit = 15
+	processesSort  = "cpu"
+)
+
 var processesCmd = &cobra.Command{
 	Use:   "processes",
-	Short: "Show running processes",
+	Short: "Show top processes by CPU or memory (read-only)",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		fmt.Fprintln(cmd.OutOrStdout(), "not implemented yet: processes")
+		mode, err := process.ParseSortMode(processesSort)
+		if err != nil {
+			return err
+		}
+		procs, err := process.Collect()
+		if err != nil {
+			return fmt.Errorf("processes: %w", err)
+		}
+		process.Sort(procs, mode)
+		top, err := process.Top(procs, processesLimit)
+		if err != nil {
+			return err
+		}
+		fmt.Fprint(cmd.OutOrStdout(), process.FormatTable(top))
 		return nil
 	},
 }
@@ -90,6 +110,8 @@ var askCmd = &cobra.Command{
 }
 
 func init() {
+	processesCmd.Flags().IntVar(&processesLimit, "limit", 15, "max processes to show (>= 1)")
+	processesCmd.Flags().StringVar(&processesSort, "sort", "cpu", "sort by \"cpu\" or \"memory\"")
 	rootCmd.AddCommand(
 		dashboardCmd,
 		systemCmd,
