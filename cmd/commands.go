@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"nexus/internal/docker"
+	"nexus/internal/git"
 	"nexus/internal/process"
 	"nexus/internal/system"
 )
@@ -89,9 +90,23 @@ var dockerCmd = &cobra.Command{
 
 var gitCmd = &cobra.Command{
 	Use:   "git",
-	Short: "Inspect current Git repository",
+	Short: "Show Git repository overview (read-only)",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		fmt.Fprintln(cmd.OutOrStdout(), "not implemented yet: git")
+		repo, err := git.Inspect("")
+		if err != nil {
+			var notRepo *git.NotRepoError
+			if errors.As(err, &notRepo) {
+				fmt.Fprint(cmd.OutOrStdout(), git.NotRepoMessage())
+				return nil
+			}
+			return fmt.Errorf("git: %w", err)
+		}
+		short, _ := cmd.Flags().GetBool("short")
+		if short {
+			fmt.Fprint(cmd.OutOrStdout(), git.FormatShort(repo))
+		} else {
+			fmt.Fprint(cmd.OutOrStdout(), git.Format(repo))
+		}
 		return nil
 	},
 }
@@ -128,6 +143,7 @@ func init() {
 	processesCmd.Flags().IntVar(&processesLimit, "limit", 15, "max processes to show (>= 1)")
 	processesCmd.Flags().StringVar(&processesSort, "sort", "cpu", "sort by \"cpu\" or \"memory\"")
 	dockerCmd.Flags().BoolVarP(&dockerAll, "all", "a", false, "include stopped containers")
+	gitCmd.Flags().Bool("short", false, "one-line summary")
 	rootCmd.AddCommand(
 		dashboardCmd,
 		systemCmd,
