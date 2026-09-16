@@ -1,10 +1,12 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/spf13/cobra"
 
+	"nexus/internal/docker"
 	"nexus/internal/process"
 	"nexus/internal/system"
 )
@@ -63,11 +65,24 @@ var processesCmd = &cobra.Command{
 	},
 }
 
+// dockerAll backs the --all flag (cobra-idiomatic).
+var dockerAll bool
+
 var dockerCmd = &cobra.Command{
 	Use:   "docker",
-	Short: "Inspect Docker containers and images",
+	Short: "List Docker containers (read-only)",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		fmt.Fprintln(cmd.OutOrStdout(), "not implemented yet: docker")
+		containers, err := docker.List(dockerAll)
+		if err != nil {
+			var unavail *docker.UnavailableError
+			if errors.As(err, &unavail) {
+				fmt.Fprint(cmd.OutOrStdout(), docker.UnavailableMessage())
+				fmt.Fprintln(cmd.ErrOrStderr(), "Warning:", docker.Detail(err))
+				return nil
+			}
+			return fmt.Errorf("docker: %w", err)
+		}
+		fmt.Fprint(cmd.OutOrStdout(), docker.FormatTable(containers))
 		return nil
 	},
 }
@@ -112,6 +127,7 @@ var askCmd = &cobra.Command{
 func init() {
 	processesCmd.Flags().IntVar(&processesLimit, "limit", 15, "max processes to show (>= 1)")
 	processesCmd.Flags().StringVar(&processesSort, "sort", "cpu", "sort by \"cpu\" or \"memory\"")
+	dockerCmd.Flags().BoolVarP(&dockerAll, "all", "a", false, "include stopped containers")
 	rootCmd.AddCommand(
 		dashboardCmd,
 		systemCmd,
