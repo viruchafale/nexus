@@ -71,7 +71,7 @@ make fmt     # gofmt -w + go vet
 make clean   # rm -f nexus
 ```
 
-## Current feature status (Phase 5 — Git)
+## Current feature status (Phase 6 — Network)
 
 | Command | Status |
 |---|---|
@@ -80,7 +80,7 @@ make clean   # rm -f nexus
 | `nexus processes` | Done — top-N table (PID/CPU/MEM/MEMORY/NAME/STATUS), `--limit`, `--sort cpu\|memory`, read-only |
 | `nexus docker` | Done — read-only `docker ps` table (CONTAINER/IMAGE/STATUS/PORTS/CREATED), `--all`, graceful unavailable message |
 | `nexus git` | Done — read-only overview (branch, clean/dirty, modified/staged/untracked, latest commit+date), `--short`, graceful outside repos |
-| `nexus network` | Stub |
+| `nexus network` | Done — read-only diagnostics (internet/DNS/latency + interfaces via stdlib, offline-safe) |
 | `nexus doctor` | Stub |
 | `nexus ask` | Stub (optional, env-configured later) |
 

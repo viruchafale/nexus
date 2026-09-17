@@ -8,6 +8,7 @@ import (
 
 	"nexus/internal/docker"
 	"nexus/internal/git"
+	"nexus/internal/network"
 	"nexus/internal/process"
 	"nexus/internal/system"
 )
@@ -113,9 +114,9 @@ var gitCmd = &cobra.Command{
 
 var networkCmd = &cobra.Command{
 	Use:   "network",
-	Short: "Run network diagnostics",
+	Short: "Run read-only network diagnostics",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		fmt.Fprintln(cmd.OutOrStdout(), "not implemented yet: network")
+		fmt.Fprint(cmd.OutOrStdout(), network.Format(network.Collect()))
 		return nil
 	},
 }
