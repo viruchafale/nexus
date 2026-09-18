@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"nexus/internal/docker"
+	"nexus/internal/doctor"
 	"nexus/internal/git"
 	"nexus/internal/network"
 	"nexus/internal/process"
@@ -123,9 +124,16 @@ var networkCmd = &cobra.Command{
 
 var doctorCmd = &cobra.Command{
 	Use:   "doctor",
-	Short: "Diagnose common development problems",
+	Short: "Run read-only diagnostics (never fixes anything)",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		fmt.Fprintln(cmd.OutOrStdout(), "not implemented yet: doctor")
+		portsFlag, _ := cmd.Flags().GetString("ports")
+		ports, err := doctor.ParsePorts(portsFlag)
+		if err != nil {
+			return err
+		}
+		opts := doctor.DefaultOptions()
+		opts.Ports = ports
+		fmt.Fprint(cmd.OutOrStdout(), doctor.Format(doctor.RunWith(opts)))
 		return nil
 	},
 }
@@ -145,6 +153,7 @@ func init() {
 	processesCmd.Flags().StringVar(&processesSort, "sort", "cpu", "sort by \"cpu\" or \"memory\"")
 	dockerCmd.Flags().BoolVarP(&dockerAll, "all", "a", false, "include stopped containers")
 	gitCmd.Flags().Bool("short", false, "one-line summary")
+	doctorCmd.Flags().String("ports", "", "comma-separated ports to probe (default: 3000,5173,8000,8080,5432,6379)")
 	rootCmd.AddCommand(
 		dashboardCmd,
 		systemCmd,

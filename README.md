@@ -71,7 +71,7 @@ make fmt     # gofmt -w + go vet
 make clean   # rm -f nexus
 ```
 
-## Current feature status (Phase 6 — Network)
+## Current feature status (Phase 7 — Doctor)
 
 | Command | Status |
 |---|---|
@@ -81,7 +81,7 @@ make clean   # rm -f nexus
 | `nexus docker` | Done — read-only `docker ps` table (CONTAINER/IMAGE/STATUS/PORTS/CREATED), `--all`, graceful unavailable message |
 | `nexus git` | Done — read-only overview (branch, clean/dirty, modified/staged/untracked, latest commit+date), `--short`, graceful outside repos |
 | `nexus network` | Done — read-only diagnostics (internet/DNS/latency + interfaces via stdlib, offline-safe) |
-| `nexus doctor` | Stub |
+| `nexus doctor` | Done — read-only checks (CPU/memory/disk, network, DNS, Docker, Git, dev ports) with PASS/WARN/FAIL + summary, `--ports` |
 | `nexus ask` | Stub (optional, env-configured later) |
 
 Foundation done: Go module, `cmd/`, `config/`, `internal/`, `ui/` structure,
