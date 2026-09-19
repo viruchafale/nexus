@@ -8,6 +8,7 @@ import (
 
 	"nexus/config"
 	"nexus/internal/logger"
+	"nexus/ui"
 )
 
 // verbose is bound to the --verbose persistent flag (cobra-idiomatic
@@ -22,9 +23,10 @@ var rootCmd = &cobra.Command{
 Inspect your machine, diagnose problems, check Docker,
 Git, networking, and optionally ask an LLM for help.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// Default `nexus` with no args shows help.
-		// dashboard is the interactive entrypoint (later phase).
-		_ = cmd.Help()
+		// Bare `nexus` launches the interactive dashboard.
+		if err := ui.Run(config.Load().NoColor); err != nil {
+			fmt.Fprintln(os.Stderr, "Error:", err)
+		}
 	},
 	SilenceUsage:  true,
 	SilenceErrors: true,

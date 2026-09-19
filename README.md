@@ -15,7 +15,7 @@ nexus/
   config/            # env-var configuration (no secrets hardcoded)
   internal/logger/   # stderr slog logger (stdlib only)
   internal/          # shared helpers (future phases)
-  ui/                # Bubble Tea / Lip Gloss UI (future phase, empty stub)
+  ui/                # Bubble Tea / Lip Gloss dashboard (screens, loaders, styles)
   docs/              # per-phase reports
 ```
 
@@ -36,8 +36,9 @@ go build -o nexus .
 ## Usage
 
 ```bash
+./nexus              # interactive dashboard (needs a TTY)
+./nexus dashboard    # same dashboard
 ./nexus --help
-./nexus dashboard
 ./nexus system
 ./nexus processes
 ./nexus docker
@@ -48,7 +49,7 @@ go build -o nexus .
 ./nexus --verbose system   # debug logging to stderr
 ```
 
-`nexus` with no args shows help.
+Keys in the dashboard: `↑`/`↓` navigate · `Enter` open · `r` refresh · `Esc` home · `q` quit.
 
 ### Configuration (environment variables)
 
@@ -71,11 +72,11 @@ make fmt     # gofmt -w + go vet
 make clean   # rm -f nexus
 ```
 
-## Current feature status (Phase 7 — Doctor)
+## Current feature status (Phase 8 — Dashboard)
 
 | Command | Status |
 |---|---|
-| `nexus dashboard` | Stub — prints "not implemented yet" |
+| `nexus dashboard` | Done — interactive Bubble Tea dashboard (all 7 screens, ↑/↓/Enter/r/Esc/q) |
 | `nexus system` | Done — OS/arch/hostname, CPU, memory, disk, uptime via gopsutil |
 | `nexus processes` | Done — top-N table (PID/CPU/MEM/MEMORY/NAME/STATUS), `--limit`, `--sort cpu\|memory`, read-only |
 | `nexus docker` | Done — read-only `docker ps` table (CONTAINER/IMAGE/STATUS/PORTS/CREATED), `--all`, graceful unavailable message |

@@ -18,8 +18,9 @@ func TestAllCommandsRegistered(t *testing.T) {
 	}
 }
 
-func TestStubCommandsDoNotError(t *testing.T) {
-	for _, name := range []string{"dashboard", "system", "processes", "docker", "git", "network", "doctor"} {
+func TestNonInteractiveCommandsDoNotError(t *testing.T) {
+	// dashboard is interactive (needs a TTY) and is covered by ui tests.
+	for _, name := range []string{"system", "processes", "docker", "git", "network", "doctor"} {
 		rootCmd.SetOut(new(bytes.Buffer))
 		rootCmd.SetArgs([]string{name})
 		if err := rootCmd.Execute(); err != nil {

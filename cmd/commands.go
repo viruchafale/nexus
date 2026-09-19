@@ -6,12 +6,14 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"nexus/config"
 	"nexus/internal/docker"
 	"nexus/internal/doctor"
 	"nexus/internal/git"
 	"nexus/internal/network"
 	"nexus/internal/process"
 	"nexus/internal/system"
+	"nexus/ui"
 )
 
 // Phase 1: command skeletons only. Each prints a clear
@@ -22,8 +24,7 @@ var dashboardCmd = &cobra.Command{
 	Use:   "dashboard",
 	Short: "Open interactive dashboard",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		fmt.Fprintln(cmd.OutOrStdout(), "not implemented yet: dashboard (interactive Bubble Tea UI comes in a later phase)")
-		return nil
+		return ui.Run(config.Load().NoColor)
 	},
 }
 
