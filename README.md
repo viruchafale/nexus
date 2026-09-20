@@ -13,8 +13,14 @@ nexus/
   main.go            # entrypoint -> cmd.Execute()
   cmd/               # Cobra commands (root + 8 subcommands)
   config/            # env-var configuration (no secrets hardcoded)
+  internal/system/   # OS/CPU/memory/disk/uptime via gopsutil
+  internal/process/  # read-only process table
+  internal/docker/   # read-only docker ps via CLI
+  internal/git/      # read-only repo overview via CLI
+  internal/network/  # stdlib diagnostics (DNS, dial, interfaces)
+  internal/doctor/   # PASS/WARN/FAIL checks reusing the above
+  internal/ai/       # optional OpenAI-compatible assistant
   internal/logger/   # stderr slog logger (stdlib only)
-  internal/          # shared helpers (future phases)
   ui/                # Bubble Tea / Lip Gloss dashboard (screens, loaders, styles)
   docs/              # per-phase reports
 ```
@@ -25,7 +31,7 @@ nexus/
 
 ## Installation
 
-Requires Go 1.22+.
+Requires Go 1.24+.
 
 ```bash
 git clone <repo-url> nexus && cd nexus
@@ -93,7 +99,7 @@ make fmt     # gofmt -w + go vet
 make clean   # rm -f nexus
 ```
 
-## Current feature status (Phase 9 — AI)
+## Current feature status (Phase 10 — audited)
 
 | Command | Status |
 |---|---|
@@ -106,5 +112,6 @@ make clean   # rm -f nexus
 | `nexus doctor` | Done — read-only checks (CPU/memory/disk, network, DNS, Docker, Git, dev ports) with PASS/WARN/FAIL + summary, `--ports` |
 | `nexus ask` | Done — optional OpenAI-compatible assistant with env context, `--show-context`, graceful no-key path |
 
-Foundation done: Go module, `cmd/`, `config/`, `internal/`, `ui/` structure,
-env config, stderr logging, Makefile, tests. No monitoring/Docker/Git/network/AI logic yet.
+All commands implemented: interactive dashboard plus read-only system, processes,
+Docker, Git, network, doctor, and optional AI troubleshooting. See `docs/` for
+per-phase reports.
